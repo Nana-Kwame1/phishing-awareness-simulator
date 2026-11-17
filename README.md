@@ -1,5 +1,7 @@
 # PhishSafe — Phishing Awareness Training Simulator
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Open_PhishSafe-4f46e5?style=for-the-badge)](https://nana-kwame1.github.io/phishing-awareness-simulator/)
+
 A safe phishing-awareness simulator built with **Python Flask** and **SQLite**, plus a **browser-only GitHub Pages demo**.
 
 **Live demo:** https://nana-kwame1.github.io/phishing-awareness-simulator/
