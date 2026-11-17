@@ -51,6 +51,23 @@ $env:FLASK_SECRET_KEY = "replace-with-a-long-random-value"
 .\.venv\Scripts\python app.py
 ```
 
+## Open in VS Code
+
+From this folder:
+
+```powershell
+code .
+```
+
+The workspace includes:
+
+- Python interpreter set to `.venv`
+- **Run PhishSafe Flask app** launch configuration
+- **Run Flask app** and **Serve GitHub Pages demo** tasks
+- Recommended extensions for Python, Flask debugging, Live Server, and Prettier
+
+To run the Flask app in VS Code, open the **Run and Debug** panel and choose **Run PhishSafe Flask app**.
+
 ## How to run a simulation
 
 1. Open **Dashboard → New campaign**.
