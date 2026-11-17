@@ -1,8 +1,17 @@
 # PhishSafe — Phishing Awareness Training Simulator
 
-A local, safe phishing-awareness simulator built with **Python Flask** and **SQLite**. It creates simulated phishing emails, tracks clicks and fake form submissions, and shows participants a short training lesson.
+A safe phishing-awareness simulator built with **Python Flask** and **SQLite**, plus a **browser-only GitHub Pages demo**.
+
+**Live demo:** https://nana-kwame1.github.io/phishing-awareness-simulator/
 
 > **Safety:** This app does **not** send real email and **never stores** usernames or passwords typed into the fake login page. Use it only with people who have agreed to participate in training.
+
+## Live demo vs. full app
+
+- **GitHub Pages demo** (`docs/`): runs entirely in the browser with `localStorage`. It is the public demo link above.
+- **Full Flask app** (`app.py`): uses a SQLite database and runs locally. Use the setup instructions below.
+
+GitHub Pages cannot run Python/Flask, so the hosted demo is a static version of the same workflow.
 
 ## Features
 
@@ -63,6 +72,10 @@ $env:FLASK_SECRET_KEY = "replace-with-a-long-random-value"
 ```text
 app.py                     Flask app, routes, database helpers
 requirements.txt           Python dependencies
+docs/                      Static GitHub Pages demo
+  index.html
+  app.js
+  style.css
 templates/
   base.html                Admin layout
   base_sim.html            Participant-facing layout with safety banner
