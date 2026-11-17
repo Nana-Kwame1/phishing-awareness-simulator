@@ -1,0 +1,27 @@
+{% extends "base_sim.html" %}
+{% block title %}{{ template.landing_title }}{% endblock %}
+{% block content %}
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-logo">{{ template.landing_title[0] }}</div>
+    <h1>{{ template.landing_title }}</h1>
+    <p class="muted">{{ template.landing_note }}</p>
+
+    <form method="post" class="login-form">
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" value="{{ participant.email }}" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="Do not enter a real password" autocomplete="off">
+      </div>
+      <button class="btn primary block" type="submit">Continue</button>
+    </form>
+
+    <p class="fine-print">
+      Training simulation: any text entered above is discarded and never saved.
+    </p>
+  </div>
+</div>
+{% endblock %}

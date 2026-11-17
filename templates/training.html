@@ -1,0 +1,62 @@
+{% extends "base_sim.html" %}
+{% block title %}Training complete? · PhishSafe{% endblock %}
+{% block content %}
+<div class="training-shell">
+  <div class="training-head">
+    <span class="badge">Micro-lesson</span>
+    <h1>
+      {% if completed %}
+        Training complete
+      {% elif reason == 'reported' %}
+        Nice work — you reported it
+      {% elif reason == 'submitted' %}
+        That was a simulated phishing page
+      {% else %}
+        Let’s pause before clicking
+      {% endif %}
+    </h1>
+    <p>
+      {% if reason == 'reported' %}
+        You flagged the message before entering any information. Reporting suspicious email is one of the fastest ways to protect the whole organization.
+      {% elif reason == 'submitted' %}
+        You entered details into a fake sign-in page. In a real attack, those credentials would be stolen. Nothing you typed was saved here — this was a safe simulation.
+      {% else %}
+        Opening a suspicious message is not the real failure. The risk starts when you click links, download attachments, or enter credentials.
+      {% endif %}
+    </p>
+  </div>
+
+  <section class="panel sim-panel">
+    <h2>Red flags in this simulation</h2>
+    <ul class="flag-list">
+      <li><strong>Unexpected sender.</strong> The message came from <code>{{ template.sender_email }}</code>, not a trusted company domain.</li>
+      <li><strong>Urgency.</strong> Phrases like “action required” push you to act before thinking.</li>
+      <li><strong>Generic greeting.</strong> “Hi {{ participant.name.split()[0] }}” can be automated and personalized from public data.</li>
+      <li><strong>Lookalike destination.</strong> The button led to a page designed to resemble a legitimate portal.</li>
+      <li><strong>Credential request.</strong> Legitimate teams rarely ask you to confirm a password through an email link.</li>
+    </ul>
+  </section>
+
+  <section class="panel sim-panel">
+    <h2>What to do next time</h2>
+    <ol class="steps">
+      <li>Hover over links and check the real destination before clicking.</li>
+      <li>Open the service directly in your browser instead of using the email link.</li>
+      <li>Check the sender’s full email address, not just the display name.</li>
+      <li>Report suspicious messages using your organization’s reporting button.</li>
+      <li>Never enter a password on a page you reached from an unexpected message.</li>
+    </ol>
+  </section>
+
+  {% if completed %}
+    <div class="success-box">
+      <strong>✓ Lesson completed.</strong> Your response has been recorded in the campaign results.
+    </div>
+    <a class="btn primary block" href="{{ url_for('dashboard') }}">Return to dashboard</a>
+  {% else %}
+    <form method="post">
+      <button class="btn primary block" type="submit">I understand — complete training</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

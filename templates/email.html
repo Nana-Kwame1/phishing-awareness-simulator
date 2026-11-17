@@ -1,0 +1,41 @@
+{% extends "base_sim.html" %}
+{% block title %}{{ template.subject }}{% endblock %}
+{% block content %}
+<div class="mail-shell">
+  <div class="mail-toolbar">
+    <span class="mail-toolbar-title">Inbox</span>
+    <form method="post" action="{{ url_for('report', token=participant.token) }}">
+      <button class="btn ghost small" type="submit">Report phishing</button>
+    </form>
+  </div>
+
+  <article class="mail-message">
+    <div class="mail-meta">
+      <div class="sender-avatar">{{ template.sender_name[0] }}</div>
+      <div>
+        <strong>{{ template.sender_name }}</strong>
+        <div class="cell-sub">&lt;{{ template.sender_email }}&gt;</div>
+      </div>
+      <div class="mail-to">to {{ participant.email }}</div>
+    </div>
+
+    <h1 class="mail-subject">{{ template.subject }}</h1>
+
+    <div class="mail-content">
+      <p>Hi {{ participant.name.split()[0] }},</p>
+      <p>{{ template.preview }}</p>
+      <p>Please use the secure link below so we can keep your account protected.</p>
+
+      <p class="center">
+        <a class="btn primary large" href="{{ url_for('landing', token=participant.token) }}">
+          {{ template.cta }}
+        </a>
+      </p>
+
+      <p class="muted small-text">
+        If you were not expecting this message, you can report it using the button above.
+      </p>
+    </div>
+  </article>
+</div>
+{% endblock %}

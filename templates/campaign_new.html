@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}New campaign · PhishSafe{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Step 1 of 1</p>
+    <h1>Create a phishing simulation</h1>
+    <p class="subtext">Participants get a simulated inbox message and a safe training flow when they interact.</p>
+  </div>
+  <a class="btn" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+</section>
+
+<div class="form-layout">
+  <form method="post" class="panel form-panel">
+    <div class="field">
+      <label for="name">Campaign name</label>
+      <input id="name" name="name" type="text" required placeholder="Q4 Security Awareness">
+    </div>
+
+    <div class="field">
+      <label for="template_key">Email template</label>
+      <select id="template_key" name="template_key">
+        {% for key, item in templates.items() %}
+          <option value="{{ key }}">{{ item.label }} — {{ item.subject }}</option>
+        {% endfor %}
+      </select>
+      <p class="hint">Choose the scenario participants will see in the simulated inbox.</p>
+    </div>
+
+    <div class="field">
+      <label for="recipients">Participants</label>
+      <textarea id="recipients" name="recipients" rows="9" required placeholder="Ada Lovelace, ada@example.com&#10;Grace Hopper, grace@example.com&#10;alan@example.com"></textarea>
+      <p class="hint">One per line. Use <code>Name, email</code> or just an email address.</p>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn primary" type="submit">Create campaign</button>
+      <a class="btn ghost" href="{{ url_for('dashboard') }}">Cancel</a>
+    </div>
+  </form>
+
+  <aside class="panel info-panel">
+    <h2>Safety by design</h2>
+    <ul class="check-list">
+      <li>No emails are sent from this app.</li>
+      <li>Each participant gets a unique simulated inbox link.</li>
+      <li>The fake login form records only that it was submitted.</li>
+      <li>Entered usernames and passwords are never stored.</li>
+      <li>Every path ends in a short training lesson.</li>
+    </ul>
+    <div class="callout">
+      <strong>Use responsibly.</strong>
+      Only run this with people who have agreed to participate in security training.
+    </div>
+  </aside>
+</div>
+{% endblock %}

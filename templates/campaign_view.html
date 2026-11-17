@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ campaign.name }} · PhishSafe{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">{{ template.label }} scenario</p>
+    <h1>{{ campaign.name }}</h1>
+    <p class="subtext">
+      Created {{ campaign.created_at[:10] }}
+      {% if campaign.launched_at %} · Launched {{ campaign.launched_at[:10] }}{% else %} · Draft{% endif %}
+    </p>
+  </div>
+  <div class="button-row">
+    <a class="btn" href="{{ url_for('dashboard') }}">Back</a>
+    {% if not campaign.launched_at %}
+      <form method="post" action="{{ url_for('campaign_launch', campaign_id=campaign.id) }}">
+        <button class="btn primary" type="submit">Mark as launched</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+
+<section class="stat-grid five">
+  <div class="stat-card"><span class="stat-label">Participants</span><strong class="stat-value">{{ stats.total }}</strong></div>
+  <div class="stat-card"><span class="stat-label">Opened</span><strong class="stat-value">{{ stats.opened }}</strong></div>
+  <div class="stat-card danger"><span class="stat-label">Clicked</span><strong class="stat-value">{{ stats.clicked }}</strong></div>
+  <div class="stat-card warning"><span class="stat-label">Submitted</span><strong class="stat-value">{{ stats.submitted }}</strong></div>
+  <div class="stat-card success"><span class="stat-label">Reported</span><strong class="stat-value">{{ stats.reported }}</strong></div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h2>Participants</h2>
+      <p class="muted">Share a unique simulation link with each participant, or open the simulated inbox.</p>
+    </div>
+    <a class="btn small" href="{{ url_for('inbox') }}">Open simulated inbox</a>
+  </div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Simulation link</th>
+          <th>Opened</th>
+          <th>Clicked</th>
+          <th>Submitted</th>
+          <th>Reported</th>
+          <th>Trained</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for participant in participants %}
+          {% set link = url_for('open_email', token=participant.token, _external=True) %}
+          <tr>
+            <td><strong>{{ participant.name }}</strong></td>
+            <td class="muted">{{ participant.email }}</td>
+            <td>
+              <input class="link-input" readonly value="{{ link }}" onclick="this.select()">
+            </td>
+            <td>{{ '✓' if participant.opened else '—' }}</td>
+            <td>{{ '✓' if participant.clicked else '—' }}</td>
+            <td>{{ '✓' if participant.submitted else '—' }}</td>
+            <td>{{ '✓' if participant.reported else '—' }}</td>
+            <td>{{ '✓' if participant.trained else '—' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="two-col">
+  <section class="panel">
+    <div class="panel-head"><h2>Recent activity</h2></div>
+    {% if events %}
+      <ul class="timeline">
+        {% for event in events %}
+          <li>
+            <span class="timeline-dot event-{{ event.event_type }}"></span>
+            <div>
+              <strong>{{ event_labels.get(event.event_type, event.event_type) }}</strong>
+              <div class="cell-sub">{{ event.participant_name }} · {{ event.created_at }}</div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted center">No activity yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Simulation controls</h2></div>
+    <p class="muted">Reset tracking to rerun the campaign, or delete it permanently.</p>
+    <div class="button-row stack">
+      <form method="post" action="{{ url_for('campaign_reset', campaign_id=campaign.id) }}" onsubmit="return confirm('Reset all tracking events for this campaign?');">
+        <button class="btn" type="submit">Reset tracking</button>
+      </form>
+      <form method="post" action="{{ url_for('campaign_delete', campaign_id=campaign.id) }}" onsubmit="return confirm('Delete this campaign and all its participants?');">
+        <button class="btn danger" type="submit">Delete campaign</button>
+      </form>
+    </div>
+    <div class="callout subtle">
+      <strong>Reminder:</strong> This app never sends real email and never stores typed passwords.
+    </div>
+  </section>
+</div>
+{% endblock %}

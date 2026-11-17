@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Simulated inbox · PhishSafe{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Safe delivery channel</p>
+    <h1>Simulated inbox</h1>
+    <p class="subtext">These are the messages participants would receive. Opening one records an open event.</p>
+  </div>
+</section>
+
+<section class="panel">
+  {% if participants %}
+    <div class="message-list">
+      {% for participant in participants %}
+        {% set t = templates[participant.template_key] %}
+        <article class="message-card">
+          <div class="message-avatar">{{ t.sender_name[0] }}</div>
+          <div class="message-body">
+            <div class="message-meta">
+              <span class="tag">{{ participant.campaign_name }}</span>
+              {% if participant.launched_at %}
+                <span class="status status-live">Launched</span>
+              {% else %}
+                <span class="status">Draft</span>
+              {% endif %}
+            </div>
+            <h3>{{ t.subject }}</h3>
+            <p class="muted">{{ t.sender_name }} &lt;{{ t.sender_email }}&gt; → {{ participant.email }}</p>
+            <p>{{ t.preview }}</p>
+          </div>
+          <a class="btn primary small" href="{{ url_for('open_email', token=participant.token) }}">Open message</a>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">✉</div>
+      <h3>Inbox is empty</h3>
+      <p>Create a campaign to generate simulated messages.</p>
+      <a class="btn primary" href="{{ url_for('campaign_new') }}">Create a campaign</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

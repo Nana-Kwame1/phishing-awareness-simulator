@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · PhishSafe{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div>
+    <p class="eyebrow">Awareness program</p>
+    <h1>Phishing simulation dashboard</h1>
+    <p class="subtext">Create campaigns, run safe simulations, and measure how your team responds.</p>
+  </div>
+  <a class="btn primary" href="{{ url_for('campaign_new') }}">+ New campaign</a>
+</section>
+
+<section class="stat-grid">
+  <div class="stat-card">
+    <span class="stat-label">Campaigns</span>
+    <strong class="stat-value">{{ campaigns|length }}</strong>
+    <span class="stat-foot">Total created</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-label">Participants</span>
+    <strong class="stat-value">{{ campaigns|sum(attribute='participant_count') }}</strong>
+    <span class="stat-foot">Across all campaigns</span>
+  </div>
+  <div class="stat-card danger">
+    <span class="stat-label">Clicked links</span>
+    <strong class="stat-value">{{ campaigns|sum(attribute='clicked_count') }}</strong>
+    <span class="stat-foot">Unique participants</span>
+  </div>
+  <div class="stat-card success">
+    <span class="stat-label">Reported</span>
+    <strong class="stat-value">{{ campaigns|sum(attribute='reported_count') }}</strong>
+    <span class="stat-foot">Unique participants</span>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div>
+      <h2>Campaigns</h2>
+      <p class="muted">Select a campaign to see participant-level results.</p>
+    </div>
+  </div>
+
+  {% if campaigns %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Campaign</th>
+          <th>Template</th>
+          <th>Participants</th>
+          <th>Click rate</th>
+          <th>Submitted</th>
+          <th>Reported</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for campaign in campaigns %}
+          {% set rate = (campaign.clicked_count / campaign.participant_count * 100)|round|int if campaign.participant_count else 0 %}
+          <tr>
+            <td>
+              <strong>{{ campaign.name }}</strong>
+              <div class="cell-sub">Created {{ campaign.created_at[:10] }}</div>
+            </td>
+            <td><span class="tag">{{ templates[campaign.template_key].label }}</span></td>
+            <td>{{ campaign.participant_count }}</td>
+            <td>
+              <div class="rate-cell">
+                <div class="bar"><span style="width: {{ rate }}%"></span></div>
+                <span>{{ rate }}%</span>
+              </div>
+            </td>
+            <td><span class="pill pill-danger">{{ campaign.submitted_count }}</span></td>
+            <td><span class="pill pill-success">{{ campaign.reported_count }}</span></td>
+            <td>
+              {% if campaign.launched_at %}
+                <span class="status status-live">Launched</span>
+              {% else %}
+                <span class="status">Draft</span>
+              {% endif %}
+            </td>
+            <td class="right">
+              <a class="btn small" href="{{ url_for('campaign_view', campaign_id=campaign.id) }}">View</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">✉</div>
+      <h3>No campaigns yet</h3>
+      <p>Create your first campaign to generate simulated emails and tracking links.</p>
+      <a class="btn primary" href="{{ url_for('campaign_new') }}">Create a campaign</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
